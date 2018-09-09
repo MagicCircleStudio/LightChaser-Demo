@@ -154,14 +154,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114070278506530878, guid: fd1791ec730522c4bbc5c269dbb45ff6,
         type: 2}
+      propertyPath: floorDetectorPrefab
+      value: 
+      objectReference: {fileID: 226624336}
+    - target: {fileID: 114070278506530878, guid: fd1791ec730522c4bbc5c269dbb45ff6,
+        type: 2}
       propertyPath: bulletParent
       value: 
       objectReference: {fileID: 1110521697}
     - target: {fileID: 114070278506530878, guid: fd1791ec730522c4bbc5c269dbb45ff6,
         type: 2}
-      propertyPath: floorDetectorPrefab
-      value: 
-      objectReference: {fileID: 226624336}
+      propertyPath: fireCooldown
+      value: 0.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd1791ec730522c4bbc5c269dbb45ff6, type: 2}
   m_IsPrefabAsset: 0

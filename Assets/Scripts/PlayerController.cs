@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public GameObject floorDetector;
 
     public Transform bulletParent;
-    public float fireCooldown = 2f;
+    public float fireCooldown = 0.4f;
+    private float fireCounter = 0f;
 
     public float maxVelocity = 3f;
     private Rigidbody rb;
@@ -42,9 +43,11 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector3(h, 0, v) * k * maxVelocity + new Vector3(0, rb.velocity.y, 0);
         }
 
-        if (Input.GetAxis("Fire1") > 0)
+        fireCounter += Time.deltaTime;
+        if (Input.GetAxis("Fire1") > 0 && fireCounter >= fireCooldown)
         {
-            var bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.5f, 0.5f, 0), Quaternion.identity, bulletParent);
+            var bullet = Instantiate(bulletPrefab, transform.position + transform.forward * 0.5f + new Vector3(0, 0.5f, 0), transform.rotation, bulletParent);
+            fireCounter = 0;
         }
 
         floorDetector.transform.position = new Vector3(0, transform.position.y, 0);
@@ -54,7 +57,10 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 4000, ~(1 << LayerMask.GetMask("Only Raycast"))))
         {
             Debug.DrawLine(ray.origin, hit.point, Color.red);
-            transform.LookAt(hit.point);
+
+            Vector3 clamped = hit.point;
+            clamped.y = transform.position.y;
+            transform.LookAt(clamped);
         }
     }
 }

@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33794133133096962}
   - component: {fileID: 23143297755351744}
   - component: {fileID: 136270606167320560}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 33678730309012156}
   - component: {fileID: 23320752389257600}
   - component: {fileID: 65489789025604806}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ MonoBehaviour:
   floorDetectorPrefab: {fileID: 0}
   floorDetector: {fileID: 0}
   bulletParent: {fileID: 0}
-  fireCooldown: 2
+  fireCooldown: 0.8
   maxVelocity: 3
 --- !u!136 &136270606167320560
 CapsuleCollider:
