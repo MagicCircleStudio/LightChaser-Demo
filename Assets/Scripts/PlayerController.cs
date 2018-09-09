@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public GameObject bulletPrefab;
+    public GameObject floorDetectorPrefab;
+    [HideInInspector] public GameObject floorDetector;
 
     public Transform bulletParent;
     public float fireCooldown = 2f;
@@ -19,6 +21,8 @@ public class PlayerController : MonoBehaviour
         bulletParent = GameObject.Find("Flying Objects").transform;
         if (bulletParent == null)
             bulletParent = Instantiate(new GameObject("Flying Objects")).transform;
+        floorDetector = Instantiate(floorDetectorPrefab, transform.parent);
+
     }
 
     private void Update()
@@ -43,7 +47,7 @@ public class PlayerController : MonoBehaviour
             var bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.5f, 0.5f, 0), Quaternion.identity, bulletParent);
         }
 
-        
+        floorDetector.transform.position = new Vector3(0, transform.position.y, 0);
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;

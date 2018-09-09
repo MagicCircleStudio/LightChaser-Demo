@@ -229,6 +229,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1200567759575794, guid: 699f7de1c1f9a3543862c5ce9a58b798,
     type: 2}
+  floorDetectorPrefab: {fileID: 0}
+  floorDetector: {fileID: 0}
   bulletParent: {fileID: 0}
   fireCooldown: 2
   maxVelocity: 3
