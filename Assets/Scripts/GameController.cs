@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour
 {
     public MapGenerator mapGenerator;
     public MapData mapData;
+    public bool enableTesting = false;
     public GameObject testingObjects;
     public GameObject playerPrefab;
     [HideInInspector]
@@ -14,7 +15,7 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         testingObjects = GameObject.Find("Testing Objects");
-        testingObjects.SetActive(false);
+        testingObjects.SetActive(enableTesting);
 
         if (!mapGenerator)
             mapGenerator = GameObject.Find("Map Generator").GetComponent<MapGenerator>();
@@ -24,22 +25,30 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        mapData = mapGenerator.Generate();
-
-        // Add player
-        
-        var playerExists = false;
-        while (!playerExists)
+        if (enableTesting)
         {
-            var i = Random.Range(0, mapData.SizeX) + 1;
-            var j = Random.Range(0, mapData.SizeZ) + 1;
 
-            if (mapData.Cells[j][i] == 0)
+        }
+        else
+        {
+            mapData = mapGenerator.Generate();
+
+            // Add player
+
+            var playerExists = false;
+            while (!playerExists)
             {
-                playerExists = true;
-                var player = Instantiate(playerPrefab, new Vector3(i, mapData.Level[j][i], j), Quaternion.identity, transform);
-                playerController = player.GetComponent<PlayerController>();
+                var i = Random.Range(0, mapData.SizeX) + 1;
+                var j = Random.Range(0, mapData.SizeZ) + 1;
+
+                if (mapData.Cells[j][i] == 0)
+                {
+                    playerExists = true;
+                    var player = Instantiate(playerPrefab, new Vector3(i, mapData.Level[j][i], j), Quaternion.identity, transform);
+                    playerController = player.GetComponent<PlayerController>();
+                }
             }
         }
+
     }
 }
