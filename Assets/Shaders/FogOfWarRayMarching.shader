@@ -105,6 +105,7 @@
                 // float fogIntensity = exp(-_FogIntensity * (1.0 - normalizedDepth));
 
                 // Ray Marching
+                i.interpolatedRay = normalize(i.worldPos - _WorldSpaceCameraPos);
                 float3 worldEndPos = _WorldSpaceCameraPos + linearDepth * i.interpolatedRay;
                 float layerThickness = normalizedDepth / _RayMarchSteps;
 
