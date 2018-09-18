@@ -23,12 +23,12 @@ GameObject:
   - component: {fileID: 33817883821286820}
   - component: {fileID: 114695452189154912}
   - component: {fileID: 64459673501674342}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 127
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4332641347313698
 Transform:
@@ -37,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1060102915095228}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 2}
+  m_LocalPosition: {x: -1, y: 1, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -375,7 +375,7 @@ MonoBehaviour:
     angleError: 8
     areaError: 15
   dontDestroyMeshOnDelete: 0
-  m_selectedFaces: 0100000003000000
+  m_selectedFaces: 01000000
   m_SelectedEdges:
   - x: 4
     y: 5
@@ -385,12 +385,4 @@ MonoBehaviour:
     y: 7
   - x: 7
     y: 6
-  - x: 12
-    y: 13
-  - x: 14
-    y: 12
-  - x: 13
-    y: 15
-  - x: 15
-    y: 14
-  m_selectedTriangles: 040000000500000006000000070000000c0000000d0000000e0000000f000000
+  m_selectedTriangles: 04000000050000000600000007000000

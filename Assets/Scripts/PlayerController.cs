@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public GameObject floorDetectorPrefab;
-    public CinemachineVirtualCamera cam;
+    public CinemachineVirtualCamera mainCamera;
+    public Camera viewCamera;
     private Transform noRotator;
     [HideInInspector] public GameObject floorDetector;
 
@@ -27,10 +28,11 @@ public class PlayerController : MonoBehaviour
             bulletParent = Instantiate(new GameObject("Flying Objects")).transform;
         floorDetector = Instantiate(floorDetectorPrefab, transform.parent);
 
-        noRotator = Instantiate(new GameObject("No Rotator"), transform.parent).transform;
+        noRotator = new GameObject("No Rotator").transform;
+        noRotator.parent = transform.parent;
 
-        cam.Follow = noRotator;
-        cam.LookAt = transform;
+        mainCamera.Follow = noRotator;
+        // mainCamera.LookAt = transform;
     }
 
     private void Update()
@@ -62,7 +64,7 @@ public class PlayerController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         Vector3 lookAtAhead = new Vector3();
-        if (Physics.Raycast(ray, out hit, 4000, ~(1 << LayerMask.GetMask("Only Raycast"))))
+        if (Physics.Raycast(ray, out hit, 4000, LayerMask.GetMask("Only Raycast")))
         {
             Debug.DrawLine(ray.origin, hit.point, Color.red);
 
@@ -73,6 +75,6 @@ public class PlayerController : MonoBehaviour
             lookAtAhead = aiming.normalized * Mathf.Clamp(aiming.magnitude / 10, 0, 1);
         }
 
-        noRotator.position = transform.position - lookAtAhead * 3;
+        noRotator.position = transform.position + lookAtAhead * 3;
     }
 }

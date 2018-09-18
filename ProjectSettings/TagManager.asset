@@ -17,6 +17,9 @@ TagManager:
   - Only Raycast
   - Bullet
   - Player
+  - Obstacle
+  - Ground
+  - Enemy
   - 
   - 
   - 
@@ -32,10 +35,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Unselectable
   - Fog of War
   m_SortingLayers:
   - name: Default

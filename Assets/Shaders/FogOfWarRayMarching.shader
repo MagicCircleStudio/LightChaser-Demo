@@ -78,23 +78,23 @@
                 // uv = saturate(uv);
 
                 #if UNITY_UV_STARTS_AT_TOP
-                    uv.v = 1.0f - uv.v;
+                    uv.x = 1.0f - uv.x;
                 #endif
                 return uv;
             }
             
             float4 frag (v2f i) : SV_Target
             {
-                float2 screenUv = i.clipPos.xy / i.clipPos.w / 2.0f + float2(0.5f, 0.5f);
-                // float4 maskColor = float4(screenUv, 0.0f, 1.0f);
+                float2 screenUV = i.clipPos.xy / i.clipPos.w / 2.0f + float2(0.5f, 0.5f);
+                // float4 maskColor = float4(screenUV, 0.0f, 1.0f);
                 #if UNITY_UV_STARTS_AT_TOP
-                    screenUv.v = 1.0f - screenUv.v;
+                    screenUV.x = 1.0f - screenUV.x;
                 #endif
 
-                float4 maskColor = float4(screenUv, 0.0f, 1.0f);
+                float4 maskColor = float4(screenUV, 0.0f, 1.0f);
                 // sample the depth texture
-                float normalizedDepth = Linear01Depth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, screenUv));
-                float linearDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, screenUv));
+                float normalizedDepth = Linear01Depth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, screenUV));
+                float linearDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, screenUV));
 
                 // Linear Fog:
                 float fogIntensity = (normalizedDepth - _FogStart) / (_FogEnd - _FogStart);
