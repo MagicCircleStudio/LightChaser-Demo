@@ -36,7 +36,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Fog of War
   m_SortingLayers:
   - name: Default
     uniqueID: 0
