@@ -41,7 +41,6 @@ GameObject:
   - component: {fileID: 135158759036419076}
   - component: {fileID: 54562928680789170}
   - component: {fileID: 114116321114865356}
-  - component: {fileID: 114298746916516464}
   m_Layer: 10
   m_Name: Bullet
   m_TagString: Untagged
@@ -189,25 +188,6 @@ MonoBehaviour:
   speed: 6
   lifeSpan: 5
   flyHeight: 0
---- !u!114 &114298746916516464
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1200567759575794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 233ab59dbd3563b439e6aee244758f50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewRadius: 0.7
-  viewAngle: 361
-  aimingHeight: 0.75
-  meshResolution: 1
-  edgeResolveIterations: 4
-  edgeDistanceThreshold: 0.5
-  visibleTargets: []
-  viewMeshFilter: {fileID: 33873685880340518}
 --- !u!135 &135158759036419076
 SphereCollider:
   m_ObjectHideFlags: 1

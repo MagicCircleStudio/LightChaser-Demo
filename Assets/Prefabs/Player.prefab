@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 4493667389242830}
   - component: {fileID: 33853442527330474}
   - component: {fileID: 23241728656707894}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: View Visualisation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -322,14 +322,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 233ab59dbd3563b439e6aee244758f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 3
-  viewAngle: 60
   aimingHeight: 0.75
-  meshResolution: 1
+  viewRadius: 3
+  viewAngle: 360
+  meshDegreeResolution: 1
   edgeResolveIterations: 4
-  edgeDistanceThreshold: 0.5
-  visibleTargets: []
+  edgeDistanceThreshold: 1
+  checkTimeGap: 0.2
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 16384
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 8192
+  visibleTargets:
+  - {fileID: 0}
   viewMeshFilter: {fileID: 33853442527330474}
+  fogProjector: {fileID: 0}
 --- !u!136 &136270606167320560
 CapsuleCollider:
   m_ObjectHideFlags: 1

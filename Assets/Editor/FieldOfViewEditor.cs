@@ -9,10 +9,10 @@ public class FieldOfViewEditor : Editor
     private void OnSceneGUI()
     {
         FieldOfView fow = (FieldOfView)target;
-        Vector3 aimingPosition = fow.transform.position + fow.transform.up * fow.aimingHeight;
+        // Vector3 aimingPosition = fow.transform.position + fow.transform.up * fow.aimingHeight;
 
         Handles.color = Color.blue;
-        Handles.DrawWireArc(aimingPosition, Vector3.up, Vector3.forward, 360, 0.1f);
+        // Handles.DrawWireArc(aimingPosition, Vector3.up, Vector3.forward, 360, 0.1f);
         Handles.DrawWireArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.viewRadius);
 
         Vector3 viewAngleA = fow.DirFromAngle(-fow.viewAngle / 2, false);
@@ -24,7 +24,7 @@ public class FieldOfViewEditor : Editor
         foreach (var visibleTarget in fow.visibleTargets)
         {
             Handles.DrawWireArc(visibleTarget.position, Vector3.up, Vector3.forward, 360, 0.1f);
-            Handles.DrawLine(aimingPosition, visibleTarget.position);
+            // Handles.DrawLine(aimingPosition, visibleTarget.position);
         }
     }
 }

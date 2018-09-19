@@ -2,35 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public delegate void TargetsVisibilityChange(List<Transform> newTargets);
+
+[ExecuteInEditMode]
 public class FieldOfView : MonoBehaviour
 {
-    public float viewRadius;
-    [Range(0, 361)] public float viewAngle;
-    public float aimingHeight = 0.75f;
+    public float aimingHeight = 0.75f;                  // 眼睛距地高度
+    public float viewRadius = 1f;                       // 可视距离
+    [Range(0, 360)] public float viewAngle = 360f;      // 可视扇形区域夹角
+    public float meshDegreeResolution = 1f;             // 扇形区域检测用的Mesh的生成三角形个数/度
+    public int edgeResolveIterations = 4;               // 计算墙壁边缘的时候二分法逼近的精度
+    public float edgeDistanceThreshold = 0.5f;          // 计算墙壁边缘的时候的阈值
+    public float checkTimeGap = 0.2f;                   // 进行检测的时间间隔
 
-    public float meshResolution;
-    public int edgeResolveIterations;
-    public float edgeDistanceThreshold;
+    public LayerMask targetMask;                        // 能被探测到的物体
+    public LayerMask obstacleMask;                      // 障碍物
 
     [HideInInspector] public List<Transform> visibleTargets = new List<Transform>();
 
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
 
+    public static event TargetsVisibilityChange OnTargetsVisibilityChange;
+    public FogProjector fogProjector;
+
     private void Start()
     {
-        viewMesh = new Mesh();
-        viewMesh.name = "View Mesh";
+        viewMesh = new Mesh() { name = "View Mesh" };
         viewMeshFilter.mesh = viewMesh;
 
-        StartCoroutine("FindTargetsWithDelay", 0.2f);
+        fogProjector = fogProjector ?? FindObjectOfType<FogProjector>();
+
+        StartCoroutine("FindTargetsWithDelay", checkTimeGap);
     }
 
     void FindVisibleTargets()
     {
         Vector3 aimingPosition = transform.position + transform.up * aimingHeight;
         visibleTargets.Clear();
-        Collider[] targetsInViewRadius = Physics.OverlapCapsule(transform.position, transform.position - transform.up * 20, viewRadius, LayerMask.GetMask("Enemy"));
+        Collider[] targetsInViewRadius = Physics.OverlapCapsule(transform.position, transform.position - transform.up * 20, viewRadius, targetMask);
 
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
@@ -41,13 +51,15 @@ public class FieldOfView : MonoBehaviour
             {
                 float dstToTarget = Vector3.Distance(transform.position, target.position);
 
-                if (!Physics.Raycast(aimingPosition, dirToTarget, dstToTarget, LayerMask.GetMask("Ground", "Obstacle")))
+                if (!Physics.Raycast(aimingPosition, dirToTarget, dstToTarget, obstacleMask))
                 {
                     if (target.position.y - transform.position.y < 0.75f)
                         visibleTargets.Add(target);
                 }
             }
         }
+
+        if (OnTargetsVisibilityChange != null) OnTargetsVisibilityChange(visibleTargets);
     }
 
     public Vector3 DirFromAngle(float angleInDegrees, bool isGlobal)
@@ -69,12 +81,12 @@ public class FieldOfView : MonoBehaviour
 
     void DrawFieldOfView()
     {
-        int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
+        int stepCount = Mathf.RoundToInt(viewAngle * meshDegreeResolution);
         float stepAngleSize = viewAngle / stepCount;
         List<Vector3> viewPoints = new List<Vector3>();
         ViewCastInfo oldViewCast = new ViewCastInfo();
 
-        for (int i = 0; i < stepCount; i++)
+        for (int i = 0; i <= stepCount; i++)
         {
             float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
             ViewCastInfo newViewCast = ViewCast(angle);
@@ -159,7 +171,7 @@ public class FieldOfView : MonoBehaviour
         Vector3 dir = DirFromAngle(globalAngle, true);
         RaycastHit hit;
 
-        if (Physics.Raycast(aimingPosition, dir, out hit, viewRadius, LayerMask.GetMask("Ground", "Obstacle")))
+        if (Physics.Raycast(aimingPosition, dir, out hit, viewRadius, obstacleMask))
         {
             return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
         }
@@ -172,6 +184,7 @@ public class FieldOfView : MonoBehaviour
     private void LateUpdate()
     {
         DrawFieldOfView();
+        fogProjector.UpdateFog();
     }
 
     public struct ViewCastInfo
