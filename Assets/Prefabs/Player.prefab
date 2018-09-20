@@ -89,7 +89,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1765782305737662}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 1, z: 0}
+  m_LocalPosition: {x: 4.75, y: 1, z: 3.375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4999574486638654}
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aimingHeight: 0.75
-  viewRadius: 3
+  viewRadius: 1
   viewAngle: 360
   meshDegreeResolution: 1
   edgeResolveIterations: 4
@@ -335,10 +335,10 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 8192
-  visibleTargets:
-  - {fileID: 0}
+  visibleTargets: []
   viewMeshFilter: {fileID: 33853442527330474}
   fogProjector: {fileID: 0}
+  updateDistance: 0.2
 --- !u!136 &136270606167320560
 CapsuleCollider:
   m_ObjectHideFlags: 1

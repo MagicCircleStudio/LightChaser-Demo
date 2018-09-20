@@ -25,6 +25,9 @@ public class FieldOfView : MonoBehaviour
 
     public static event TargetsVisibilityChange OnTargetsVisibilityChange;
     public FogProjector fogProjector;
+    public bool updateDependOnDistance = true;
+    public float updateDistance = 0.2f;
+    Vector3 lastUpdatePosition;
 
     private void Start()
     {
@@ -59,7 +62,7 @@ public class FieldOfView : MonoBehaviour
             }
         }
 
-        if (OnTargetsVisibilityChange != null) OnTargetsVisibilityChange(visibleTargets);
+        // if (OnTargetsVisibilityChange != null) OnTargetsVisibilityChange(visibleTargets);
     }
 
     public Vector3 DirFromAngle(float angleInDegrees, bool isGlobal)
@@ -184,7 +187,13 @@ public class FieldOfView : MonoBehaviour
     private void LateUpdate()
     {
         DrawFieldOfView();
-        fogProjector.UpdateFog();
+        if (!updateDependOnDistance)
+            fogProjector.UpdateFog();
+        else if (Vector3.Distance(transform.position, lastUpdatePosition) > updateDistance || Time.time < .5f)
+        {
+            lastUpdatePosition = transform.position;
+            fogProjector.UpdateFog();
+        }
     }
 
     public struct ViewCastInfo

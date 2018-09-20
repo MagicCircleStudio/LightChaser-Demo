@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
         noRotator.parent = transform.parent;
 
         mainCamera.Follow = noRotator;
-        // mainCamera.LookAt = transform;
+        mainCamera.LookAt = transform;
     }
 
     private void Update()

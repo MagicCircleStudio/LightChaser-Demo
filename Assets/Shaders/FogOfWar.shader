@@ -1,12 +1,8 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced '_Projector' with 'unity_Projector'
-// Upgrade NOTE: replaced '_ProjectorClip' with 'unity_ProjectorClip'
-
 Shader "Projector/Fog Of War" {
 	Properties {
 		_OldFogTex ("Old Fog Texture", 2D) = "gray" {}
 		_FogTex ("Fog Texture", 2D) = "gray" {}
+		_EnemyVisionTex ("Enemy Vision Texture", 2D) = "gray" {}
 		_Color ("Color", Color) = (0,0,0,0)
 	}
 	Subshader {
@@ -42,6 +38,7 @@ Shader "Projector/Fog Of War" {
 			
 			sampler2D _OldFogTex;
 			sampler2D _FogTex;
+			sampler2D _EnemyVisionTex;
 			fixed4 _Color;
 			uniform float _Blend;
 			
@@ -49,6 +46,9 @@ Shader "Projector/Fog Of War" {
 			{
 				fixed a1 = tex2Dproj (_OldFogTex, UNITY_PROJ_COORD(i.uvShadow)).a;
 				fixed a2 = tex2Dproj (_FogTex, UNITY_PROJ_COORD(i.uvShadow)).a;
+				fixed a3 = tex2Dproj (_EnemyVisionTex, UNITY_PROJ_COORD(i.uvShadow)).a;
+				a1 = min(a1, 1 - a3);
+				a2 = min(a2, 1 - a3);
 
 				fixed a = lerp(a1, a2, _Blend);
 				fixed4 col = lerp(_Color, fixed4(1,1,1,1), a);
