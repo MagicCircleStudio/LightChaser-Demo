@@ -75,11 +75,11 @@
                 float4 objectPos = mul(unity_WorldToObject, float4(worldPos, 1.0f));
                 float2 uv = objectPos.xz + float2(0.5f, 0.5f);
 
-                // uv = saturate(uv);
-
-                #if UNITY_UV_STARTS_AT_TOP
-                    uv.v = 1.0f - uv.v;
-                #endif
+                // No need to flip uv.y on D3D/Metal.
+                // When rendering into a Texture on a Direct3D-like platform, Unity internally flips rendering upside down.
+                // #if UNITY_UV_STARTS_AT_TOP
+                //     uv.y = 1.0f - uv.y;
+                // #endif
                 return uv;
             }
             
@@ -88,7 +88,7 @@
                 float2 screenUv = i.clipPos.xy / i.clipPos.w / 2.0f + float2(0.5f, 0.5f);
                 // float4 maskColor = float4(screenUv, 0.0f, 1.0f);
                 #if UNITY_UV_STARTS_AT_TOP
-                    screenUv.v = 1.0f - screenUv.v;
+                    screenUv.y = 1.0f - screenUv.y;
                 #endif
 
                 float4 maskColor = float4(screenUv, 0.0f, 1.0f);
