@@ -162,6 +162,10 @@ Prefab:
       propertyPath: floorDetectorPrefab
       value: 
       objectReference: {fileID: 226624336}
+    - target: {fileID: 1765782305737662, guid: fd1791ec730522c4bbc5c269dbb45ff6, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd1791ec730522c4bbc5c269dbb45ff6, type: 2}
   m_IsPrefabAsset: 0
@@ -327,6 +331,7 @@ GameObject:
   - component: {fileID: 183746463}
   - component: {fileID: 183746462}
   - component: {fileID: 183746461}
+  - component: {fileID: 183746465}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -395,7 +400,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 183746460}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.113, z: -0.099}
+  m_LocalPosition: {x: 0, y: 1.521, z: -0.099}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children:
   - {fileID: 1314829465}
@@ -403,6 +408,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &183746465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 183746460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b13ca2d3831fd4b35bb7edb784dec7ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 1
 --- !u!1 &211371776 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1765782305737662, guid: fd1791ec730522c4bbc5c269dbb45ff6,
@@ -998,7 +1015,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1029533173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2212,7 +2229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1973752475
 Transform:
   m_ObjectHideFlags: 0
