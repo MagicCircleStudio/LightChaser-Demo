@@ -59,7 +59,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _ExtinctionCoef: 2.21
+    - _ExtinctionCoef: 6
     - _FogEnd: 1
     - _FogIntensity: 1
     - _FogStart: 0
