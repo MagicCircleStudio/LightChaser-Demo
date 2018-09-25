@@ -311,6 +311,7 @@ MonoBehaviour:
   bulletParent: {fileID: 0}
   fireCooldown: 0.4
   maxVelocity: 3
+  visibleTargets: []
 --- !u!114 &114696196048992298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -335,10 +336,12 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 8192
-  visibleTargets: []
   viewMeshFilter: {fileID: 33853442527330474}
   fogProjector: {fileID: 0}
+  updateDependOnDistance: 1
   updateDistance: 0.2
+  player: {fileID: 114070278506530878}
+  visibleTargets: []
 --- !u!136 &136270606167320560
 CapsuleCollider:
   m_ObjectHideFlags: 1

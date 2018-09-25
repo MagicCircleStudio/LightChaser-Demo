@@ -209,15 +209,16 @@ MonoBehaviour:
   checkTimeGap: 0.2
   targetMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
-  visibleTargets: []
+    m_Bits: 8192
   viewMeshFilter: {fileID: 33873685880340518}
   fogProjector: {fileID: 0}
   updateDependOnDistance: 0
   updateDistance: 0.2
+  player: {fileID: 0}
+  visibleTargets: []
 --- !u!135 &135158759036419076
 SphereCollider:
   m_ObjectHideFlags: 1

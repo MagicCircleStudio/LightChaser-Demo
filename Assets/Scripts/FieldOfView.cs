@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public delegate void TargetsVisibilityChange(List<Transform> newTargets);
-
 [ExecuteInEditMode]
 public class FieldOfView : MonoBehaviour
 {
@@ -18,16 +16,16 @@ public class FieldOfView : MonoBehaviour
     public LayerMask targetMask;                        // 能被探测到的物体
     public LayerMask obstacleMask;                      // 障碍物
 
-    [HideInInspector] public List<Transform> visibleTargets = new List<Transform>();
-
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
 
-    public static event TargetsVisibilityChange OnTargetsVisibilityChange;
     public FogProjector fogProjector;
     public bool updateDependOnDistance = true;
     public float updateDistance = 0.2f;
     Vector3 lastUpdatePosition;
+
+    public PlayerController player;
+    [HideInInspector] public List<Transform> visibleTargets = new List<Transform>();
 
     private void Start()
     {
@@ -36,13 +34,18 @@ public class FieldOfView : MonoBehaviour
 
         fogProjector = fogProjector ?? FindObjectOfType<FogProjector>();
 
-        StartCoroutine("FindTargetsWithDelay", checkTimeGap);
+        // StartCoroutine("FindTargetsWithDelay", checkTimeGap);
     }
 
-    void FindVisibleTargets()
+    void DetectVisibleTargets()
     {
         Vector3 aimingPosition = transform.position + transform.up * aimingHeight;
-        visibleTargets.Clear();
+
+        var newVisibleTargets = new List<Transform>();
+        var targetsToAdd = new List<Transform>();
+        var targetsToRemove = new List<Transform>();
+        targetsToRemove.AddRange(visibleTargets);
+
         Collider[] targetsInViewRadius = Physics.OverlapCapsule(transform.position, transform.position - transform.up * 20, viewRadius, targetMask);
 
         for (int i = 0; i < targetsInViewRadius.Length; i++)
@@ -57,12 +60,21 @@ public class FieldOfView : MonoBehaviour
                 if (!Physics.Raycast(aimingPosition, dirToTarget, dstToTarget, obstacleMask))
                 {
                     if (target.position.y - transform.position.y < 0.75f)
-                        visibleTargets.Add(target);
+                    {
+                        newVisibleTargets.Add(target);
+                        if (!visibleTargets.Contains(target))
+                            targetsToAdd.Add(target);
+                        else
+                            targetsToRemove.Remove(target);
+                            
+                    }
+                       
                 }
             }
         }
 
-        // if (OnTargetsVisibilityChange != null) OnTargetsVisibilityChange(visibleTargets);
+        visibleTargets = newVisibleTargets;
+        if (player) player.VisibleTargetsUpdate(targetsToAdd, targetsToRemove);
     }
 
     public Vector3 DirFromAngle(float angleInDegrees, bool isGlobal)
@@ -78,7 +90,7 @@ public class FieldOfView : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(delay);
-            FindVisibleTargets();
+            DetectVisibleTargets();
         }
     }
 
@@ -186,6 +198,7 @@ public class FieldOfView : MonoBehaviour
 
     private void LateUpdate()
     {
+        DetectVisibleTargets();
         DrawFieldOfView();
         if (!updateDependOnDistance)
             fogProjector.UpdateFog();

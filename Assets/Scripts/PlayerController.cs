@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+public delegate void TargetsVisibilityChange(List<Transform> newTargets);
+
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
@@ -20,6 +22,9 @@ public class PlayerController : MonoBehaviour
     public float maxVelocity = 3f;
     private Rigidbody rb;
 
+    public List<Transform> visibleTargets = new List<Transform>();
+    public static event TargetsVisibilityChange OnTargetsVisibilityChange;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -33,6 +38,35 @@ public class PlayerController : MonoBehaviour
 
         mainCamera.Follow = noRotator;
         mainCamera.LookAt = transform;
+    }
+
+    public void VisibleTargetsUpdate(List<Transform> toAdd, List<Transform> toRemove)
+    {
+        bool updateFlag = false;
+
+        foreach (var item in toAdd)
+        {
+            if (!visibleTargets.Contains(item))
+            {
+                Debug.Log("Add" + item.name);
+                visibleTargets.Add(item);
+                updateFlag = true;
+            }
+        }
+
+        foreach (var item in toRemove)
+        {
+            if(visibleTargets.Contains(item))
+            {
+                Debug.Log("Remove" + item.name);
+                visibleTargets.Remove(item);
+                updateFlag = true;
+            }
+        }
+
+        if(updateFlag && OnTargetsVisibilityChange != null)
+            OnTargetsVisibilityChange(visibleTargets);
+
     }
 
     private void Update()
@@ -56,6 +90,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetAxis("Fire1") > 0 && fireCounter >= fireCooldown)
         {
             var bullet = Instantiate(bulletPrefab, transform.position + transform.forward * 0.5f + new Vector3(0, 0.5f, 0), transform.rotation, bulletParent);
+            var bulletFOV = bullet.GetComponent<FieldOfView>();
+            if (bulletFOV)
+                bulletFOV.player = this;
             fireCounter = 0;
         }
 
