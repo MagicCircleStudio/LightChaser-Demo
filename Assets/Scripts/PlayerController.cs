@@ -1,117 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
 
-public delegate void TargetsVisibilityChange(List<Transform> newTargets);
+public class PlayerController : MonoBehaviour {
 
-[RequireComponent(typeof(Rigidbody))]
-public class PlayerController : MonoBehaviour
-{
-    public GameObject bulletPrefab;
-    public GameObject floorDetectorPrefab;
-    public CinemachineVirtualCamera mainCamera;
-    public Camera viewCamera;
-    private Transform noRotator;
-    [HideInInspector] public GameObject floorDetector;
+	public float moveSpeed = 5f;
+	public float rotateSpeed = 1f;
+	[HideInInspector] public Vector3 moveDirection;
+	[HideInInspector] public Vector3 faceDirection;
 
-    public Transform bulletParent;
-    public float fireCooldown = 0.4f;
-    private float fireCounter = 0f;
+	public GameObject bulletPrefab;
+	public Transform bulletParent;
+	public Transform bulletSpawnPosition;
+	public float fireCooldown = 0.4f;
+	private float fireCounter = 0f;
 
-    public float maxVelocity = 3f;
-    private Rigidbody rb;
+	private void Start() {
+		var parent = GameObject.Find("Bullet Parent");
+		if (parent == null)
+			bulletParent = new GameObject("Bullet Parent").transform;
+		else
+			bulletParent = parent.transform;
+	}
 
-    public List<Transform> visibleTargets = new List<Transform>();
-    public static event TargetsVisibilityChange OnTargetsVisibilityChange;
+	private void Update() {
+		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxis("Vertical");
+		moveDirection = Vector3.Normalize(new Vector3(horizontal, 0f, vertical));
 
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-        bulletParent = GameObject.Find("Flying Objects").transform;
-        if (bulletParent == null)
-            bulletParent = Instantiate(new GameObject("Flying Objects")).transform;
-        floorDetector = Instantiate(floorDetectorPrefab, transform.parent);
+		if (moveDirection.magnitude > 0.64f)
+			faceDirection = moveDirection;
+		else
+			faceDirection = transform.forward;
 
-        noRotator = new GameObject("No Rotator").transform;
-        noRotator.parent = transform.parent;
+		transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(faceDirection), rotateSpeed * Time.deltaTime);
+		transform.position += moveDirection * moveSpeed * Time.deltaTime;
 
-        mainCamera.Follow = noRotator;
-        mainCamera.LookAt = transform;
-    }
-
-    public void VisibleTargetsUpdate(List<Transform> toAdd, List<Transform> toRemove)
-    {
-        bool updateFlag = false;
-
-        foreach (var item in toAdd)
-        {
-            if (!visibleTargets.Contains(item))
-            {
-                Debug.Log("Add" + item.name);
-                visibleTargets.Add(item);
-                updateFlag = true;
-            }
-        }
-
-        foreach (var item in toRemove)
-        {
-            if(visibleTargets.Contains(item))
-            {
-                Debug.Log("Remove" + item.name);
-                visibleTargets.Remove(item);
-                updateFlag = true;
-            }
-        }
-
-        if(updateFlag && OnTargetsVisibilityChange != null)
-            OnTargetsVisibilityChange(visibleTargets);
-
-    }
-
-    private void Update()
-    {
-        var h = Input.GetAxis("Horizontal");
-        var v = Input.GetAxis("Vertical");
-
-        if (h != 0 || v != 0)
-        {
-            var k = 1f; // 将正方形分布的方向矢量映射成圆形分布的系数，防止斜角速度过快
-
-            if (Mathf.Abs(v) > Mathf.Abs(h))
-                k = 1 / new Vector2(h, 1).magnitude;
-            else
-                k = 1 / new Vector2(v, 1).magnitude;
-
-            rb.velocity = new Vector3(h, 0, v) * k * maxVelocity + new Vector3(0, rb.velocity.y, 0);
-        }
-
-        fireCounter += Time.deltaTime;
-        if (Input.GetAxis("Fire1") > 0 && fireCounter >= fireCooldown)
-        {
-            var bullet = Instantiate(bulletPrefab, transform.position + transform.forward * 0.5f + new Vector3(0, 0.5f, 0), transform.rotation, bulletParent);
-            var bulletFOV = bullet.GetComponent<FieldOfView>();
-            if (bulletFOV)
-                bulletFOV.player = this;
-            fireCounter = 0;
-        }
-
-        floorDetector.transform.position = new Vector3(0, transform.position.y, 0);
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        Vector3 lookAtAhead = new Vector3();
-        if (Physics.Raycast(ray, out hit, 4000, LayerMask.GetMask("Only Raycast")))
-        {
-            Debug.DrawLine(ray.origin, hit.point, Color.red);
-
-            Vector3 lookAt = hit.point;
-            lookAt.y = transform.position.y;
-            transform.LookAt(lookAt);
-            Vector3 aiming = lookAt - transform.position;
-            lookAtAhead = aiming.normalized * Mathf.Clamp(aiming.magnitude / 10, 0, 1);
-        }
-
-        noRotator.position = transform.position + lookAtAhead * 3;
-    }
+		fireCounter += Time.deltaTime;
+		if (Input.GetKeyDown(KeyCode.Space) && fireCounter >= fireCooldown) {
+			Instantiate(bulletPrefab, bulletSpawnPosition.position, bulletSpawnPosition.rotation, bulletParent);
+			fireCounter = 0;
+		}
+	}
 }
